@@ -1,0 +1,52 @@
+[
+  {
+    "id": 0,
+    "title": "Rent Burden Lab 2026",
+    "tag": "Web",
+    "blurb": "Live project exploring rent burden data and insights through an interactive web experience.",
+    "status": "Live now",
+    "url": "https://rentburdenlab2026-ea5lm3rrc-faccendataryn-5845s-projects.vercel.app/"
+  },
+  {
+    "id": 1,
+    "title": "Placeholder Project 01",
+    "tag": "Mobile",
+    "blurb": "Future case study placeholder for a mobile UX redesign.",
+    "status": "Awaiting upload"
+  },
+  {
+    "id": 2,
+    "title": "Placeholder Project 02",
+    "tag": "Web",
+    "blurb": "Future case study placeholder for a conversion-focused web flow.",
+    "status": "Awaiting upload"
+  },
+  {
+    "id": 3,
+    "title": "Placeholder Project 03",
+    "tag": "Research",
+    "blurb": "Future case study placeholder for user interviews and synthesis.",
+    "status": "Awaiting upload"
+  },
+  {
+    "id": 4,
+    "title": "Placeholder Project 04",
+    "tag": "Web",
+    "blurb": "Future case study placeholder for a design system extension.",
+    "status": "Awaiting upload"
+  },
+  {
+    "id": 5,
+    "title": "Placeholder Project 05",
+    "tag": "Mobile",
+    "blurb": "Future case study placeholder for app onboarding improvements.",
+    "status": "Awaiting upload"
+  },
+  {
+    "id": 6,
+    "title": "Placeholder Project 06",
+    "tag": "Research",
+    "blurb": "Future case study placeholder for usability testing results.",
+    "status": "Awaiting upload"
+  }
+]
