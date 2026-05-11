@@ -94,9 +94,11 @@ const AWARDS = [
 
 export default function App() {
   const audioContextRef = useRef(null);
+  const heroContentRef = useRef(null);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [cursor, setCursor] = useState({ x: -100, y: -100, visible: false });
   const [navOpen, setNavOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   const playHoverTone = () => {
     if (!soundEnabled) return;
@@ -137,16 +139,36 @@ export default function App() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.target.classList.toggle('visible', e.isIntersecting)),
-      { threshold: 0.1 }
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      { threshold: 0.12, rootMargin: '0px 0px -50px 0px' }
     );
-    document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
+    document.querySelectorAll('.fade-in, .scroll-reveal').forEach((el) => observer.observe(el));
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(total > 0 ? (window.scrollY / total) * 100 : 0);
+      if (heroContentRef.current) {
+        const offset = window.scrollY * 0.25;
+        const fade = Math.max(0, 1 - window.scrollY / (window.innerHeight * 0.7));
+        heroContentRef.current.style.transform = `translateY(${offset}px)`;
+        heroContentRef.current.style.opacity = fade;
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
     <div className="page-shell">
       <div className="noise" aria-hidden="true" />
+      <div
+        className="scroll-progress-bar"
+        aria-hidden="true"
+        style={{ width: `${scrollProgress}%` }}
+      />
       <div
         className={`cursor-blade${cursor.visible ? ' visible' : ''}`}
         aria-hidden="true"
@@ -184,7 +206,7 @@ export default function App() {
       <main>
         {/* ── HERO ───────────────────────────────────────── */}
         <section id="home" className="hero-section">
-          <div className="hero-content">
+          <div className="hero-content" ref={heroContentRef}>
             <p className="hero-eyebrow">UX Portfolio</p>
             <h1 className="hero-name glitch" data-text="Taryn Faccenda">
               Taryn Faccenda
@@ -217,11 +239,12 @@ export default function App() {
 
         {/* ── PROJECTS ───────────────────────────────────── */}
         <section id="projects" className="section fade-in">
+          <span className="chapter-num">Chapter 01</span>
           <p className="section-label">Featured Work</p>
           <h2 className="section-heading">Projects</h2>
           <div className="project-grid">
-            {FEATURED_PROJECTS.map((p) => (
-              <article key={p.id} className="project-card">
+            {FEATURED_PROJECTS.map((p, i) => (
+              <article key={p.id} className="project-card scroll-reveal reveal-up" style={{ '--delay': `${i * 150}ms` }}>
                 <div className="project-tags">
                   {p.tags.map((t) => (
                     <span className="tag" key={t}>
@@ -249,11 +272,12 @@ export default function App() {
 
         {/* ── SKILLS ─────────────────────────────────────── */}
         <section id="skills" className="section fade-in">
+          <span className="chapter-num">Chapter 02</span>
           <p className="section-label">Capabilities</p>
           <h2 className="section-heading">Skills</h2>
           <div className="skills-grid">
-            {SKILL_CATEGORIES.map((cat) => (
-              <div key={cat.category} className={`skill-card accent-${cat.accent}`}>
+            {SKILL_CATEGORIES.map((cat, i) => (
+              <div key={cat.category} className={`skill-card accent-${cat.accent} scroll-reveal reveal-up`} style={{ '--delay': `${i * 120}ms` }}>
                 <h3 className="skill-category">{cat.category}</h3>
                 <ul className="skill-list">
                   {cat.skills.map((s) => (
@@ -270,11 +294,12 @@ export default function App() {
         {/* ── ABOUT ──────────────────────────────────────── */}
         {/* ── EXPERIENCE ─────────────────────────────────── */}
         <section id="experience" className="section fade-in">
+          <span className="chapter-num">Chapter 03</span>
           <p className="section-label">Work History</p>
           <h2 className="section-heading">Experience</h2>
           <div className="exp-list">
-            {EXPERIENCE.map((job) => (
-              <div key={job.id} className="exp-item">
+            {EXPERIENCE.map((job, i) => (
+              <div key={job.id} className="exp-item scroll-reveal reveal-left" style={{ '--delay': `${i * 100}ms` }}>
                 <div className="exp-header">
                   <div>
                     <p className="exp-role">{job.role}</p>
@@ -299,6 +324,7 @@ export default function App() {
 
         {/* ── ABOUT ──────────────────────────────────────── */}
         <section id="about" className="section fade-in">
+          <span className="chapter-num">Chapter 04</span>
           <p className="section-label">Background</p>
           <h2 className="section-heading">About</h2>
           <div className="about-content">
@@ -329,6 +355,7 @@ export default function App() {
 
         {/* ── CONTACT ────────────────────────────────────── */}
         <section id="contact" className="section contact-section fade-in">
+          <span className="chapter-num">Chapter 05</span>
           <p className="section-label">Get In Touch</p>
           <h2 className="section-heading">Contact</h2>
           <p className="contact-intro">Open to collaborations, feedback, and opportunities.</p>
