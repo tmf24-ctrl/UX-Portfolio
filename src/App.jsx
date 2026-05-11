@@ -25,7 +25,7 @@ const FEATURED_PROJECTS = [
     description:
       'An AI-powered concept focused on helping users navigate job-related technology with more confidence. The UX work centered on making AI behavior understandable, reducing ambiguity in system responses, and designing interaction patterns that feel transparent, supportive, and easy to trust.',
     tags: ['AI UX', 'Interaction Design', 'Prototyping'],
-    url: '#',
+    url: 'https://github.com/tmf24-ctrl/IS219_Final_API',
   },
 ];
 
