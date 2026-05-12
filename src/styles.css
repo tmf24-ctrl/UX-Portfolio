@@ -870,9 +870,217 @@ body {
   transform: none;
 }
 
+/* ── Chapter Nav Dots ───────────────────────────────── */
+.chapter-nav {
+  position: fixed;
+  right: 1.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  z-index: 400;
+}
+
+.chapter-dot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  text-decoration: none;
+}
+
+.chapter-dot::after {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  transition: background 260ms ease, transform 260ms ease, box-shadow 260ms ease;
+  flex-shrink: 0;
+}
+
+.chapter-dot.active::after {
+  background: var(--neon);
+  border-color: var(--neon);
+  box-shadow: 0 0 8px var(--neon), 0 0 20px rgba(57, 255, 20, 0.45);
+  transform: scale(1.4);
+}
+
+.chapter-dot-label {
+  font-size: 0.65rem;
+  font-family: var(--font-stamp);
+  letter-spacing: 0.12rem;
+  color: var(--muted);
+  opacity: 0;
+  transform: translateX(8px);
+  transition: opacity 200ms ease, transform 200ms ease, color 200ms ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.chapter-dot:hover .chapter-dot-label,
+.chapter-dot.active .chapter-dot-label {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--text);
+}
+
+.chapter-dot.active .chapter-dot-label {
+  color: var(--neon);
+}
+
+/* ── Typewriter ─────────────────────────────────────── */
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  background: var(--pink);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 0.85s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ── Hero Stats ─────────────────────────────────────── */
+.hero-stats {
+  display: flex;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.stat-value {
+  font-family: var(--font-heading);
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+.stat-suffix {
+  color: var(--pink);
+  font-size: 1.8rem;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.16rem;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-family: var(--font-stamp);
+}
+
+/* ── Scroll Hint ────────────────────────────────────── */
+.scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.scroll-hint-text {
+  font-family: var(--font-stamp);
+  font-size: 0.6rem;
+  letter-spacing: 0.3rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.scroll-hint-arrow {
+  font-size: 1.1rem;
+  color: var(--purple);
+  animation: bounce-down 1.6s ease-in-out infinite;
+}
+
+@keyframes bounce-down {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(9px); }
+}
+
+/* ── Marquee Ticker ─────────────────────────────────── */
+.marquee-track {
+  overflow: hidden;
+  padding: 0.85rem 0;
+  background: rgba(0, 0, 0, 0.28);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.marquee-inner {
+  display: flex;
+  gap: 0;
+  white-space: nowrap;
+  animation: marquee 32s linear infinite;
+  width: max-content;
+}
+
+.marquee-item {
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.2);
+  padding: 0 2rem;
+  position: relative;
+}
+
+.marquee-item::after {
+  content: '✦';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.42rem;
+  color: var(--pink);
+  opacity: 0.55;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 /* ── Responsive ─────────────────────────────────────── */
 @media (max-width: 768px) {
   .cursor-blade {
+    display: none;
+  }
+
+  .chapter-nav {
+    display: none;
+  }
+
+  .hero-stats {
+    gap: 1.5rem;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+
+  .scroll-hint {
     display: none;
   }
 

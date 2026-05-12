@@ -92,13 +92,40 @@ const AWARDS = [
   'National State Seal of Biliteracy — French Language',
 ];
 
+const CHAPTERS = [
+  { id: 'home', label: 'Intro' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'about', label: 'About' },
+  { id: 'contact', label: 'Contact' },
+];
+
+const STATS = [
+  { value: 6, label: "Dean's List Semesters", suffix: 'x' },
+  { value: 3, label: 'Roles Held', suffix: '+' },
+  { value: 5, label: 'Years Experience', suffix: '+' },
+];
+
+const MARQUEE_ITEMS = [
+  'UX Design', 'React', 'AI Interfaces', 'Data Visualization', 'Prototyping',
+  'JavaScript', 'Python', 'Node.js', 'Human-Centered', 'Interaction Design',
+  'Full-Stack', 'Anti-Pattern UI', "Dean's List",
+];
+
+const TYPEWRITER_TEXT = 'I design AI tools that feel usable, understandable, and human.';
+
 export default function App() {
   const audioContextRef = useRef(null);
   const heroContentRef = useRef(null);
+  const statsRef = useRef(null);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [cursor, setCursor] = useState({ x: -100, y: -100, visible: false });
   const [navOpen, setNavOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [typedText, setTypedText] = useState('');
+  const [activeSection, setActiveSection] = useState('home');
+  const [statValues, setStatValues] = useState(STATS.map(() => 0));
 
   const playHoverTone = () => {
     if (!soundEnabled) return;
@@ -161,6 +188,62 @@ export default function App() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Active section tracking for chapter dots
+  useEffect(() => {
+    const sections = document.querySelectorAll('section[id]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) setActiveSection(e.target.id); });
+      },
+      { threshold: 0.4 }
+    );
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, []);
+
+  // Typewriter effect
+  useEffect(() => {
+    let i = 0;
+    setTypedText('');
+    const delay = setTimeout(() => {
+      const interval = setInterval(() => {
+        i++;
+        setTypedText(TYPEWRITER_TEXT.slice(0, i));
+        if (i >= TYPEWRITER_TEXT.length) clearInterval(interval);
+      }, 38);
+      return () => clearInterval(interval);
+    }, 1200);
+    return () => clearTimeout(delay);
+  }, []);
+
+  // Count-up stats
+  useEffect(() => {
+    if (!statsRef.current) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      observer.disconnect();
+      STATS.forEach((stat, i) => {
+        const duration = 1400;
+        const stepTime = 16;
+        const totalSteps = duration / stepTime;
+        let step = 0;
+        const timer = setInterval(() => {
+          step++;
+          const progress = step / totalSteps;
+          const eased = 1 - Math.pow(1 - progress, 3);
+          setStatValues((prev) => {
+            const next = [...prev];
+            next[i] = Math.round(eased * stat.value);
+            return next;
+          });
+          if (step >= totalSteps) clearInterval(timer);
+        }, stepTime);
+      });
+    }, { threshold: 0.5 });
+    observer.observe(statsRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="page-shell">
       <div className="noise" aria-hidden="true" />
@@ -174,7 +257,19 @@ export default function App() {
         aria-hidden="true"
         style={{ left: `${cursor.x}px`, top: `${cursor.y}px` }}
       />
-
+      {/* ── CHAPTER NAV DOTS ────────────────────────── */}
+      <nav className="chapter-nav" aria-label="Chapter navigation">
+        {CHAPTERS.map((ch) => (
+          <a
+            key={ch.id}
+            href={`#${ch.id}`}
+            className={`chapter-dot${activeSection === ch.id ? ' active' : ''}`}
+            aria-label={ch.label}
+          >
+            <span className="chapter-dot-label">{ch.label}</span>
+          </a>
+        ))}
+      </nav>
       {/* ── NAV ────────────────────────────────────────── */}
       <nav className="site-nav" aria-label="Main navigation">
         <button
@@ -213,7 +308,8 @@ export default function App() {
             </h1>
             <p className="hero-title">Aspiring UX Designer for AI-Powered Applications</p>
             <p className="hero-statement">
-              I design AI tools that feel usable, understandable, and human.
+              <span className="typewriter">{typedText}</span>
+              <span className="typewriter-cursor" aria-hidden="true" />
             </p>
             <div className="hero-actions">
               <a href="#projects" className="btn btn-primary">
@@ -231,9 +327,37 @@ export default function App() {
                 LinkedIn
               </a>
             </div>
+
+            {/* ── STATS ──────────────────────────── */}
+            <div className="hero-stats" ref={statsRef}>
+              {STATS.map((stat, i) => (
+                <div key={stat.label} className="stat-item">
+                  <span className="stat-value">
+                    {statValues[i]}<span className="stat-suffix">{stat.suffix}</span>
+                  </span>
+                  <span className="stat-label">{stat.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
+
+          {/* Scroll hint */}
+          <div className="scroll-hint" aria-hidden="true">
+            <span className="scroll-hint-text">Scroll</span>
+            <div className="scroll-hint-arrow">↓</div>
+          </div>
+
           <div className="hero-decor" aria-hidden="true" />
         </section>
+
+        {/* ── MARQUEE ────────────────────────────────── */}
+        <div className="marquee-track" aria-hidden="true">
+          <div className="marquee-inner">
+            {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
+              <span key={i} className="marquee-item">{item}</span>
+            ))}
+          </div>
+        </div>
 
         <div className="section-divider" aria-hidden="true" />
 
